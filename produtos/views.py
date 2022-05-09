@@ -1,6 +1,11 @@
 from django.http import JsonResponse
-from django.shortcuts import  render
+from django.shortcuts import render
+
 from .models import Produtos, DataConsulta
+
+
+def RenderTabela(request):
+    return render(request, 'tabela.html')
 
 
 def formata_data(produto, datas):
@@ -37,4 +42,4 @@ def ListaProdutos(request):
         
         json_data.append(dados)
         
-    return JsonResponse({'data': json_data})
+    return JsonResponse({'datas': sorted(datas), "recordsTotal": len(json_data), 'dados': json_data})
