@@ -1,7 +1,15 @@
 1. Fork/Clone:
 
 1. Run:
-
+    ```bash
+    python3 -m venv env
+    ```
+    ```bash
+    source env/bin/activate
+    ```
+    ```bash
+    pip install -r requirements.txt
+    ```
     ```bash
     python manage.py migrate
     ```
@@ -12,4 +20,4 @@
     python manage.py runserver
     ```
 
-    Navigate to [http://localhost:8000/](http://localhost:8000/).
+    Vá para [http://localhost:8000/](http://localhost:8000/).
