@@ -4,36 +4,45 @@
 <head>
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="//cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.11.5/datatables.min.css"/>
 </head>
 
 <body>
 	<h1>Produtos</h1>
 	<hr>
-	<table id="example" class="display" style="width:100%">
-		<thead>
-			<th>Produto</th>
-			<th>Data de inserção na loja</th>
-			<th>Total de vendas</th>
-		</thead>
-	</table>
+	<table id="example" class="display" style="width:100%"></table>
 
 	<script src="//code.jquery.com/jquery-3.5.1.js"></script>
 	<script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 	<script language="javascript">
-		$(document).ready(function() {
-			$('#example').DataTable( {
-				"ajax": {
-					"url": "/dados/",
-					"dataSrc": "dados"
-				},
-				"deferRender": true,
-				"columns": [
-					{ "data": "product_url" },
-					{ "data": "product_url_created_at" },
-					{ "data": "total" }
-				]
-			} );
-		} );
+		$(document).ready(function () {
+            $.ajax({
+                url: "/dados/",
+                dataType: "json",
+                dataSrc: "",
+                success: function (res) {
+                    const { datas, recordsTotal, dados } = res
+                    const parsedData = dados.map(el => ({
+                        ...el, ...el.consult_date.reduce((acc, consult_date) => {
+                            acc[consult_date.consult_date] = consult_date.c
+                            return acc
+                        }, {})
+                    }))
+
+                    var columns = [{ "data": "product_url", "title": "Produto" },
+                    { "data": "product_url_created_at", "title": "Data de inserção na loja" },
+                    { "data": "total", "title": "Total de vendas" }].concat(datas.flat().map(el => ({ data: el, title: el })));
+					console.log(parsedData)
+					console.log(columns)
+                    $('#example').DataTable({
+						deferRender: true,
+                        data: parsedData,
+                        columns: columns,
+                    });
+                }
+            })
+        });
 	</script>
 </body>
 
